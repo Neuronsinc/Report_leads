@@ -1,7 +1,6 @@
 from cgitb import text
 import datetime
 import math
-from turtle import textinput, width
 import streamlit as st
 import graphviz as graphviz
 
