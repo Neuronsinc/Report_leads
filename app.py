@@ -320,7 +320,7 @@ with st.container():
         graphanterior.edge('2', '3', label=str(format((pasado_realizada/pasado_agendada)*100, '.2f')) + '%', fontcolor=color_final_re)
 
         st.graphviz_chart(graphanterior)
-
+    if(total_leads > 0 and total_agendada > 0 and total_realizada > 0):
         with col2:
             graph2 = graphviz.Digraph(
                 node_attr={
@@ -344,21 +344,21 @@ with st.container():
             graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
 
             st.graphviz_chart(graph2)
+    if(precio_lead_actual > 0 and precio_lead_pasado > 0):
+        with col3:
+            graph = graphviz.Digraph(
+            graph_attr={'rankdir':'LR'},
+            edge_attr={
+                'style':'invis'
+            }
+            )
+            graph.node('5', label=str(precio_lead_pasado), shape="box", style="filled", width="2", color='#FE839C', fillcolor="#FE839C")
+            graph.node('4', label='Costo por lead:', shape="plaintext", height="0.01", width="")
+            graph.node('3', label='', shape="plaintext", width="")
+            graph.node('2', label=str(precio_lead_actual), shape="box", style="filled", width="2", color='#85A0FE', fillcolor="#85A0FE")
+            graph.node('1', label='Costo por lead:', shape="plaintext", height="0.01", width="")
+            # graph.edge('1', '2')
+            # graph.edge('2', '3')
+            # graph.edge('3', '4')
 
-  with col3:
-    graph = graphviz.Digraph(
-      graph_attr={'rankdir':'LR'},
-      edge_attr={
-        'style':'invis'
-      }
-    )
-    graph.node('5', label=str(precio_lead_pasado), shape="box", style="filled", width="2", color='#FE839C', fillcolor="#FE839C")
-    graph.node('4', label='Costo por lead:', shape="plaintext", height="0.01", width="")
-    graph.node('3', label='', shape="plaintext", width="")
-    graph.node('2', label=str(precio_lead_actual), shape="box", style="filled", width="2", color='#85A0FE', fillcolor="#85A0FE")
-    graph.node('1', label='Costo por lead:', shape="plaintext", height="0.01", width="")
-    # graph.edge('1', '2')
-    # graph.edge('2', '3')
-    # graph.edge('3', '4')
-
-    st.graphviz_chart(graph)
+            st.graphviz_chart(graph)
