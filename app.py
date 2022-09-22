@@ -344,7 +344,7 @@ with st.container():
             graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
 
             st.graphviz_chart(graph2)
-    if(precio_lead_actual > 0 and precio_lead_pasado > 0):
+    if(precio_lead_actual >= 0 and precio_lead_pasado >= 0 and precio_lead_actual != None):
         with col3:
             graph = graphviz.Digraph(
             graph_attr={'rankdir':'LR'},
