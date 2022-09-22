@@ -153,29 +153,29 @@ if(len(numero_leads) > 0 and len(numero_agendada) > 0 and len(numero_realizada) 
             elif(ef_re_total >= 6):
                 color_final_re = "Green"
 
-    with col2:
-        graph2 = graphviz.Digraph(
-            node_attr={
-                'height': '1',
-                'width': '1.5',
-                'shape': 'box',
-                'fontsize': '8',
-                'style': 'filled',
-                'color': '#85A0FE',
-                'fixedsize': 'true',
-                'fontcolor': 'white',
-                'fillcolor': '#85A0FE'
-            }
-        )   
-        graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-        graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-        graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-        graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
-        graph2.edge('MES ACTUAL', '1', style="invis")
-        graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
-        graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
+            with col2:
+                graph2 = graphviz.Digraph(
+                    node_attr={
+                        'height': '1',
+                        'width': '1.5',
+                        'shape': 'box',
+                        'fontsize': '8',
+                        'style': 'filled',
+                        'color': '#85A0FE',
+                        'fixedsize': 'true',
+                        'fontcolor': 'white',
+                        'fillcolor': '#85A0FE'
+                    }
+                )   
+                graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
+                graph2.edge('MES ACTUAL', '1', style="invis")
+                graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
+                graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
 
-        st.graphviz_chart(graph2)
+                st.graphviz_chart(graph2)
 
 
     if(number_of_weeks > 3):
@@ -261,32 +261,32 @@ if(len(numero_leads) > 0 and len(numero_agendada) > 0 and len(numero_realizada) 
                 color_final_re = "orange"
             elif(ef_re_total >= 6):
                 color_final_re = "Green"
-        with col2:
-            st.markdown("#")
-            st.markdown("#")
-            st.markdown("###")
-            graph2 = graphviz.Digraph(
-            node_attr={
-                'height': '1',
-                'width': '1.5',
-                'shape': 'box',
-                'fontsize': '8',
-                'style': 'filled',
-                'color': '#85A0FE',
-                'fixedsize': 'true',
-                'fontcolor': 'white',
-                'fillcolor': '#85A0FE'
-            }
-        )   
-            graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-            graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-            graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-            graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
-            graph2.edge('MES ACTUAL', '1', style="invis")
-            graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
-            graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
+            with col2:
+                st.markdown("#")
+                st.markdown("#")
+                st.markdown("###")
+                graph2 = graphviz.Digraph(
+                node_attr={
+                    'height': '1',
+                    'width': '1.5',
+                    'shape': 'box',
+                    'fontsize': '8',
+                    'style': 'filled',
+                    'color': '#85A0FE',
+                    'fixedsize': 'true',
+                    'fontcolor': 'white',
+                    'fillcolor': '#85A0FE'
+                }
+            )   
+                graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
+                graph2.edge('MES ACTUAL', '1', style="invis")
+                graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
+                graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
 
-            st.graphviz_chart(graph2)
+                st.graphviz_chart(graph2)
 
 
         
@@ -321,29 +321,29 @@ with st.container():
 
         st.graphviz_chart(graphanterior)
 
-  with col2:
-    graph2 = graphviz.Digraph(
-        node_attr={
-            'height': '1',
-            'width': '1.5',
-            'shape': 'box',
-            'fontsize': '8',
-            'style': 'filled',
-            'color': '#85A0FE',
-            'fixedsize': 'true',
-            'fontcolor': 'white',
-            'fillcolor': '#85A0FE'
-        }
-    )   
-    graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-    graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-    graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-    graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
-    graph2.edge('MES ACTUAL', '1', style="invis")
-    graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
-    graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
+        with col2:
+            graph2 = graphviz.Digraph(
+                node_attr={
+                    'height': '1',
+                    'width': '1.5',
+                    'shape': 'box',
+                    'fontsize': '8',
+                    'style': 'filled',
+                    'color': '#85A0FE',
+                    'fixedsize': 'true',
+                    'fontcolor': 'white',
+                    'fillcolor': '#85A0FE'
+                }
+            )   
+            graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+            graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+            graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+            graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
+            graph2.edge('MES ACTUAL', '1', style="invis")
+            graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
+            graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
 
-    st.graphviz_chart(graph2)
+            st.graphviz_chart(graph2)
 
   with col3:
     graph = graphviz.Digraph(
