@@ -1,10 +1,7 @@
 graphviz==0.20.1
 streamlit==1.12.2
 aiohttp @ file:///C:/ci/aiohttp_1646806572557/work
-aiosignal @ file:///tmp/build/80754af9/aiosignal_1637843061372/work
-alabaster @ file:///home/ktietz/src/ci/alabaster_1611921544520/work
 altair==4.2.0
-anaconda-client @ file:///C:/ci/anaconda-client_1635342725944/work
 anaconda-navigator==2.3.0
 anaconda-project @ file:///tmp/build/80754af9/anaconda-project_1637161053845/work
 anyio @ file:///C:/ci/anyio_1644481921011/work/dist
@@ -166,30 +163,6 @@ multipledispatch @ file:///C:/ci/multipledispatch_1607574329826/work
 munkres==1.1.4
 mypy-extensions==0.4.3
 navigator-updater==0.2.1
-nbclassic @ file:///opt/conda/conda-bld/nbclassic_1644943264176/work
-nbclient @ file:///C:/ci/nbclient_1650290387259/work
-nbconvert @ file:///C:/ci/nbconvert_1649741016669/work
-nbformat @ file:///C:/ci/nbformat_1649845125000/work
-nest-asyncio @ file:///C:/ci/nest-asyncio_1649829929390/work
-networkx @ file:///opt/conda/conda-bld/networkx_1647437648384/work
-nltk @ file:///opt/conda/conda-bld/nltk_1645628263994/work
-nose @ file:///opt/conda/conda-bld/nose_1642704612149/work
-notebook @ file:///C:/ci/notebook_1645002729033/work
-numba @ file:///C:/ci/numba_1650394399948/work
-numexpr @ file:///C:/ci/numexpr_1640704337920/work
-numpy @ file:///C:/ci/numpy_and_numpy_base_1649782970434/work
-numpydoc @ file:///opt/conda/conda-bld/numpydoc_1643788541039/work
-olefile @ file:///Users/ktietz/demo/mc3/conda-bld/olefile_1629805411829/work
-openpyxl @ file:///tmp/build/80754af9/openpyxl_1632777717936/work
-packaging @ file:///tmp/build/80754af9/packaging_1637314298585/work
-pandas @ file:///C:/ci/pandas_1650373458095/work
-pandocfilters @ file:///opt/conda/conda-bld/pandocfilters_1643405455980/work
-panel @ file:///C:/ci/panel_1650623703033/work
-param @ file:///tmp/build/80754af9/param_1636647414893/work
-paramiko @ file:///opt/conda/conda-bld/paramiko_1640109032755/work
-parsel @ file:///C:/ci/parsel_1646740216444/work
-parso @ file:///opt/conda/conda-bld/parso_1641458642106/work
-partd @ file:///opt/conda/conda-bld/partd_1647245470509/work
 pathspec==0.7.0
 patsy==0.5.2
 pep8==1.7.1
@@ -197,18 +170,7 @@ pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
 pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
 Pillow==9.0.1
 pipreqs==0.4.11
-pkginfo @ file:///tmp/build/80754af9/pkginfo_1643162084911/work
-plotly @ file:///opt/conda/conda-bld/plotly_1646671701182/work
-pluggy @ file:///C:/ci/pluggy_1648024580010/work
-poyo @ file:///tmp/build/80754af9/poyo_1617751526755/work
-prometheus-client @ file:///opt/conda/conda-bld/prometheus_client_1643788673601/work
-prompt-toolkit @ file:///tmp/build/80754af9/prompt-toolkit_1633440160888/work
-Protego @ file:///tmp/build/80754af9/protego_1598657180827/work
 protobuf==3.19.1
-psutil @ file:///C:/ci/psutil_1612298199233/work
-ptyprocess @ file:///tmp/build/80754af9/ptyprocess_1609355006118/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
-pure-eval @ file:///opt/conda/conda-bld/pure_eval_1646925070566/work
-py @ file:///opt/conda/conda-bld/py_1644396412707/work
 pyarrow==9.0.0
 pyasn1 @ file:///Users/ktietz/demo/mc3/conda-bld/pyasn1_1629708007385/work
 pyasn1-modules==0.2.8
@@ -219,19 +181,8 @@ pyct @ file:///C:/ci/pyct_1613411728548/work
 pycurl==7.44.1
 pydeck==0.8.0b3
 PyDispatcher==2.0.5
-pydocstyle @ file:///tmp/build/80754af9/pydocstyle_1621600989141/work
-pyerfa @ file:///C:/ci/pyerfa_1621560974055/work
-pyflakes @ file:///tmp/build/80754af9/pyflakes_1617200973297/work
-Pygments @ file:///opt/conda/conda-bld/pygments_1644249106324/work
-PyHamcrest @ file:///tmp/build/80754af9/pyhamcrest_1615748656804/work
-PyJWT @ file:///C:/ci/pyjwt_1619682721924/work
-pylint @ file:///C:/ci/pylint_1627536884966/work
 pyls-spyder==0.4.0
 Pympler==1.0.1
-PyNaCl @ file:///C:/ci/pynacl_1607612759007/work
-pyodbc @ file:///C:/ci/pyodbc_1647426110990/work
-pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1635333100036/work
-pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
 pyreadline==2.1
 pyrsistent @ file:///C:/ci/pyrsistent_1636093225342/work
 PySocks @ file:///C:/ci/pysocks_1605307512533/work
@@ -338,14 +289,4 @@ widgetsnbextension @ file:///C:/ci/widgetsnbextension_1644991377168/work
 win-inet-pton @ file:///C:/ci/win_inet_pton_1605306162074/work
 win-unicode-console==0.5
 wincertstore==0.2
-wrapt @ file:///C:/ci/wrapt_1607574570428/work
-xarray @ file:///opt/conda/conda-bld/xarray_1639166117697/work
-xlrd @ file:///tmp/build/80754af9/xlrd_1608072521494/work
-XlsxWriter @ file:///opt/conda/conda-bld/xlsxwriter_1649073856329/work
-xlwings==0.24.9
-yapf @ file:///tmp/build/80754af9/yapf_1615749224965/work
-yarg==0.1.9
-yarl @ file:///C:/ci/yarl_1606940155993/work
-zict==2.0.0
-zipp @ file:///opt/conda/conda-bld/zipp_1641824620731/work
-zope.interface @ file:///C:/ci/zope.interface_1625036252485/work
+
