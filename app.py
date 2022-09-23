@@ -99,13 +99,13 @@ if(len(numero_leads) > 0 and len(numero_agendada) > 0 and len(numero_realizada) 
             },
             edge_attr={'weight':'1'}
         )
-        graph.node('1', label=str(numero_leads[0]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-        graph.node('2', label=str(numero_agendada[0]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
-        graph.node('3', label=str(numero_realizada[0]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
-        graph.edge('1', '2', label=str(format(efectividad_agendada[0],'.2f')) + '%', fontcolor=color_ef_agendada[0])
-        graph.edge('2', '3', label=str(format(efectividad_realizada[0],'.2f')) + '%', fontcolor=color_ef_realizada[0])
+        graph.node('7', label=str(numero_leads[2]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+        graph.node('8', label=str(numero_agendada[2]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
+        graph.node('9', label=str(numero_realizada[2]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
+        graph.edge('7', '8', label=str(format(efectividad_agendada[2],'.2f')) + '%', fontcolor=color_ef_agendada[2])
+        graph.edge('8', '9', label=str(format(efectividad_realizada[2],'.2f')) + '%', fontcolor=color_ef_realizada[2])
         graph.node(dates[2], shape='plaintext', style="", fontcolor="black")
-
+        
 
         graph.node('4', label=str(numero_leads[1]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#85A0FE', color="#85A0FE")
         graph.node('5', label=str(numero_agendada[1]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
@@ -114,13 +114,12 @@ if(len(numero_leads) > 0 and len(numero_agendada) > 0 and len(numero_realizada) 
         graph.edge('5', '6', label=str(format(efectividad_realizada[1],'.2f')) + '%', fontcolor=color_ef_realizada[1])
         graph.node(dates[1], shape='plaintext', style="", fontcolor="black")
 
-        graph.node('7', label=str(numero_leads[2]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-        graph.node('8', label=str(numero_agendada[2]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
-        graph.node('9', label=str(numero_realizada[2]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
-        graph.edge('7', '8', label=str(format(efectividad_agendada[2],'.2f')) + '%', fontcolor=color_ef_agendada[2])
-        graph.edge('8', '9', label=str(format(efectividad_realizada[2],'.2f')) + '%', fontcolor=color_ef_realizada[2])
-
-
+        
+        graph.node('1', label=str(numero_leads[0]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+        graph.node('2', label=str(numero_agendada[0]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
+        graph.node('3', label=str(numero_realizada[0]), fontsize="12", fontcolor="black", shape="circle", style='filled', fillcolor='#FFD14C', color="#FFD14C")
+        graph.edge('1', '2', label=str(format(efectividad_agendada[0],'.2f')) + '%', fontcolor=color_ef_agendada[0])
+        graph.edge('2', '3', label=str(format(efectividad_realizada[0],'.2f')) + '%', fontcolor=color_ef_realizada[0])
         graph.node(dates[0], shape='plaintext', style="", fontcolor="black")
 
         graph.node('Leads', shape='plaintext', style="", fontcolor="black")
