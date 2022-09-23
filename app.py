@@ -232,11 +232,7 @@ if(len(numero_leads) > 0 and len(numero_agendada) > 0 and len(numero_realizada) 
                 grap.edge('2', '3', label=str(format(efectividad_realizada[4],'.2f')) + '%', fontcolor=color_ef_realizada[4])
                 grap.node(dates[3], shape='plaintext', style="", fontcolor="black")
 
-                grap.node('Leads', shape='plaintext', style="", fontcolor="black")
-                grap.node('Citas Agendadas', shape='plaintext', style="", fontcolor="black")
-                grap.node('Citas Realizadas', shape='plaintext', style="", fontcolor="black")
-                grap.edge('Leads', 'Citas Agendadas', style="invis")
-                grap.edge('Citas Agendadas', 'Citas Realizadas', style="invis")
+              
                 st.graphviz_chart(grap)
 
         total_leads = sum(numero_leads)
