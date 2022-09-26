@@ -1,11 +1,23 @@
 from cgitb import text
 import datetime
+from io import BytesIO
 import math
 import streamlit as st
 import graphviz as graphviz
+from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE_TYPE
+from pptx.dml.color import RGBColor
+from datetime import date
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import PP_ALIGN
+
+EFECTIVIDAD_BAJA = RGBColor(0xFF, 0x00, 0x00)
+EFECTIVIDAD_MEDIA = RGBColor(0xFF,0xA5,0x00)
+EFECTIVIDAD_ALTA = RGBColor(0x00, 0xFF, 0x00)
 
 st.set_page_config(layout="wide")
 st.title("Creación de Reportes Sobre Leads y Efectividad de Citas")
+
 
 
 numero_leads = []
@@ -22,6 +34,9 @@ days = abs(today_date-start_date).days
 
 number_of_weeks = math.ceil(days/7)
 
+matriz_leads_citas = [[] for x in range(number_of_weeks)]
+
+
 pages = 1 if number_of_weeks <= 3 else 2
 
 col1, col2, col3 = st.columns(3)
@@ -33,24 +48,41 @@ curr_date = start_date
 for i in range(number_of_weeks):
     col1.write(str(curr_date))
     col3.markdown('<p style="color:rgba(0, 0, 0, 0.5)">.</p>', unsafe_allow_html=True)
-    if(curr_date + datetime.timedelta(days = 7) > today_date):
+    if(curr_date + datetime.timedelta(days = 6) > today_date):
         dates.append(curr_date.strftime('%d/%m/%Y') + '-' +  today_date.strftime('%d/%m/%Y'))
         col2.write(today_date.strftime('%d/%m/%Y'))
     else:
         dates.append(curr_date.strftime('%d/%m/%Y') + ' - ' + (curr_date + datetime.timedelta(days = 7)).strftime('%d/%m/%Y'))
-        col2.write(str(curr_date + datetime.timedelta(days = 7)))
+        col2.write(str(curr_date + datetime.timedelta(days = 6)))
         curr_date = curr_date + datetime.timedelta(days = 7)
-    numero_leads.append(int(col1.text_input("",value="0",key="Lead" + str(i))))
-    numero_agendada.append(int(col2.text_input("",value="0",key="citaA" + str(i))))
-    numero_realizada.append(int(col3.text_input("",value="0",key="citaR" + str(i))))
+    #numero_leads.append(int(col1.text_input("",value="0",key="Lead" + str(i))))
+    #numero_agendada.append(int(col2.text_input("",value="0",key="citaA" + str(i))))
+    #numero_realizada.append(int(col3.text_input("",value="0",key="citaR" + str(i))))'''
 
-'''
-## Datos del mes pasado
-'''
+    matriz_leads_citas[i].append(col1.number_input("",value=0,key="Lead" + str(i), min_value=0))
+    matriz_leads_citas[i].append(col2.number_input("",value=0,key="citaA" + str(i), min_value=0))
+    matriz_leads_citas[i].append(col3.number_input("",value=0,key="citaR" + str(i), min_value=0))
 
-pasado_leads = int(st.text_input(value=0, label="Numero de leads mes pasado"))
-pasado_agendada = int(st.text_input(value=0, label="Numero de citas agendadas mes pasado"))
-pasado_realizada = int(st.text_input(value=0,label="Numero de citas realizadas mes pasado"))
+st.write(matriz_leads_citas)
+
+column1, column2 = st.columns(2)
+with column1:
+    '''
+    ## Datos del mes actual
+    '''
+
+    actual_leads = int(st.text_input(value=0, label="Numero de leads mes actual"))
+    actual_agendada = int(st.text_input(value=0, label="Numero de citas agendadas mes actual"))
+    actual_realizada = int(st.text_input(value=0,label="Numero de citas realizadas mes actual"))
+
+with column2:
+    '''
+    ## Datos del mes pasado
+    '''
+
+    pasado_leads = int(st.text_input(value=0, label="Numero de leads mes pasado"))
+    pasado_agendada = int(st.text_input(value=0, label="Numero de citas agendadas mes pasado"))
+    pasado_realizada = int(st.text_input(value=0,label="Numero de citas realizadas mes pasado"))
 
 '''
 ## Otros
@@ -58,29 +90,93 @@ pasado_realizada = int(st.text_input(value=0,label="Numero de citas realizadas m
 precio_lead_actual = int(st.text_input(value=0,label="Precio por lead mes actual"))
 precio_lead_pasado = int(st.text_input(value=0,label="Precio por lead mes pasado"))
 
+efectividades = [[] for x in range(number_of_weeks)]
+
 efectividad_agendada = []
 efectividad_realizada = []
 color_ef_agendada = []
 color_ef_realizada = []
 for i in range(number_of_weeks):
-    if(numero_agendada[i] > 0 and numero_leads[i] > 0 and numero_realizada[i] > 0):
-        efectividad_agendada.append(round(numero_agendada[i] / numero_leads[i], 4) *100)
-        efectividad_realizada.append(round(numero_realizada[i] / numero_agendada[i], 4)*100)
-        
-        if(efectividad_agendada[i] < 7):
-            color_ef_agendada.append("red")
-        elif(efectividad_agendada[i] >= 7 and efectividad_agendada[i] < 10):
-            color_ef_agendada.append("orange")
-        elif(efectividad_agendada[i] >= 10):
-            color_ef_agendada.append("green")
+    if(all(x > 0 for x in matriz_leads_citas[i])):
+        efectividad_agendada = round(matriz_leads_citas[i][1] / matriz_leads_citas[i][0], 4) * 100
+        efectividad_realizada = round(matriz_leads_citas[i][2] / matriz_leads_citas[i][1], 4)* 100
+        if(efectividad_agendada < 7):
+            efectividades[i].append([format(efectividad_agendada,'.2f'), EFECTIVIDAD_BAJA])
+        elif(efectividad_agendada >= 7 and efectividad_agendada < 10):
+            efectividades[i].append([format(efectividad_agendada,'.2f'), EFECTIVIDAD_MEDIA])
+        elif(efectividad_agendada >= 10):
+            efectividades[i].append([format(efectividad_agendada,'.2f'), EFECTIVIDAD_ALTA])
 
-        if(efectividad_realizada[i] < 5):
-            color_ef_realizada.append("red")
-        elif(efectividad_realizada[i] >= 5 and efectividad_realizada[i] < 6):
-            color_ef_realizada.append("orange")
-        elif(efectividad_realizada[i] >= 6):
-            color_ef_realizada.append("green")
+        if(efectividad_realizada < 5):
+            efectividades[i].append([format(efectividad_realizada,'.2f'), EFECTIVIDAD_BAJA])
+        elif(efectividad_realizada >= 5 and efectividad_realizada < 6):
+            efectividades[i].append([format(efectividad_realizada,'.2f'), EFECTIVIDAD_MEDIA])
+        elif(efectividad_realizada >= 6):
+            efectividades[i].append([format(efectividad_realizada,'.2f'), EFECTIVIDAD_ALTA])
 
+
+
+        def srt(grp):
+            sort_shape = grp.shapes[0]
+            print(sort_shape)
+            if sort_shape.has_text_frame:
+                return sort_shape.text
+
+        prs = Presentation('test.pptx')
+        for slide in prs.slides:
+            group_shapes = [
+                shape for shape in slide.shapes
+                if shape.shape_type == MSO_SHAPE_TYPE.GROUP
+            ]
+            group_shapes.sort(key=srt)
+            for group_shape in group_shapes:
+                i = int(group_shape.shapes[0].text) - 1
+                group_shape.shapes[0].text = ''
+                group_shape.shapes[0].text = dates[i]               
+                j = 0
+                k = 0
+                for oval in [shape for shape in group_shape.shapes if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE and shape.auto_shape_type == MSO_SHAPE.OVAL]:
+                    oval.text = ''
+                    p = oval.text_frame.paragraphs[0]
+                    p.alignment = PP_ALIGN.CENTER
+                    run = p.add_run()
+                    run.text = str(matriz_leads_citas[i][j])
+                    font = run.font
+                    print(oval.text)
+                    j = j+1
+
+                for textbox in [shape for shape in group_shape.shapes if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX and shape != group_shape.shapes[0]]:
+                    textbox.text = ''
+                    print(textbox.text)
+                    p = textbox.text_frame.paragraphs[0]
+                    p.alignment = PP_ALIGN.CENTER
+                    run = p.add_run()
+                    run.text = efectividades[i][k][0]
+                    font = run.font
+                    font.color.rgb = efectividades[i][k][1]
+                    print(textbox.text)
+                    k = k+1
+
+                print('---------')
+
+
+        binary_output = BytesIO()
+        prs.save(binary_output) 
+
+        st.download_button( 
+
+            label = 'Download ppw',
+            data = binary_output.getvalue(),
+
+            file_name='reporte_' + date.today().strftime("%d_%m_%Y") + '.pptx',
+
+            mime='application/vnd.openxmlformats-officedocument.presentationml.presentation',
+
+        )
+
+
+
+'''
 if(len(numero_leads) > 0 and len(numero_agendada) > 0 and len(numero_realizada) > 0 and len(efectividad_agendada) > 0 and len(efectividad_realizada) > 0):
    with st.container():
 
@@ -284,76 +380,77 @@ if(len(numero_leads) > 0 and len(numero_agendada) > 0 and len(numero_realizada) 
                 st.graphviz_chart(graph2)
 
 
-        
+            
 
-with st.container():
+    with st.container():
 
-  col1, col2, col3 = st.columns(3, gap="large")
+        col1, col2, col3 = st.columns(3, gap="large")
 
-  with col1:
-    if(pasado_agendada > 0 and pasado_leads > 0 and pasado_realizada > 0):
-        graphanterior = graphviz.Digraph(
-        node_attr={
-            'height': '1',
-            'width': '1.3',
-            'shape': 'box',
-            'fontsize': '8',
-            'style': 'filled',
-            'color': '#FE839C',
-            'fixedsize': 'true',
-            'fontcolor': 'white',
-            'fillcolor': '#FE839C'
-        }
-        )
-        
-        graphanterior.node('1', label=str(pasado_leads), fontsize="12", fontcolor="black", shape="box", style='filled')
-        graphanterior.node('2', label=str(pasado_agendada), fontsize="12", fontcolor="black", shape="box", style='filled')
-        graphanterior.node('3', label=str(pasado_realizada), fontsize="12", fontcolor="black", shape="box", style='filled')
-        graphanterior.node('MES ANTERIOR', shape='plaintext', style="", fontcolor="black", height="", width="")
-        graphanterior.edge('MES ANTERIOR', '1', style="invis")
-        graphanterior.edge('1', '2', label=str(format((pasado_agendada/pasado_leads)*100, '.2f')) + '%', fontcolor=color_final_ag)
-        graphanterior.edge('2', '3', label=str(format((pasado_realizada/pasado_agendada)*100, '.2f')) + '%', fontcolor=color_final_re)
-
-        st.graphviz_chart(graphanterior)
-    if(total_leads > 0 and total_agendada > 0 and total_realizada > 0):
-        with col2:
-            graph2 = graphviz.Digraph(
+        with col1:
+            if(pasado_agendada > 0 and pasado_leads > 0 and pasado_realizada > 0):
+                graphanterior = graphviz.Digraph(
                 node_attr={
                     'height': '1',
-                    'width': '1.5',
+                    'width': '1.3',
                     'shape': 'box',
                     'fontsize': '8',
                     'style': 'filled',
-                    'color': '#85A0FE',
+                    'color': '#FE839C',
                     'fixedsize': 'true',
                     'fontcolor': 'white',
-                    'fillcolor': '#85A0FE'
+                    'fillcolor': '#FE839C'
                 }
-            )   
-            graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-            graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-            graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
-            graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
-            graph2.edge('MES ACTUAL', '1', style="invis")
-            graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
-            graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
+                )
+                
+                graphanterior.node('1', label=str(pasado_leads), fontsize="12", fontcolor="black", shape="box", style='filled')
+                graphanterior.node('2', label=str(pasado_agendada), fontsize="12", fontcolor="black", shape="box", style='filled')
+                graphanterior.node('3', label=str(pasado_realizada), fontsize="12", fontcolor="black", shape="box", style='filled')
+                graphanterior.node('MES ANTERIOR', shape='plaintext', style="", fontcolor="black", height="", width="")
+                graphanterior.edge('MES ANTERIOR', '1', style="invis")
+                graphanterior.edge('1', '2', label=str(format((pasado_agendada/pasado_leads)*100, '.2f')) + '%', fontcolor=color_final_ag)
+                graphanterior.edge('2', '3', label=str(format((pasado_realizada/pasado_agendada)*100, '.2f')) + '%', fontcolor=color_final_re)
 
-            st.graphviz_chart(graph2)
-    if(precio_lead_actual >= 0 and precio_lead_pasado >= 0 and precio_lead_actual != None):
-        with col3:
-            graph = graphviz.Digraph(
-            graph_attr={'rankdir':'LR'},
-            edge_attr={
-                'style':'invis'
-            }
-            )
-            graph.node('5', label=str(precio_lead_pasado), shape="box", style="filled", width="2", color='#FE839C', fillcolor="#FE839C")
-            graph.node('4', label='Costo por lead:', shape="plaintext", height="0.01", width="")
-            graph.node('3', label='', shape="plaintext", width="")
-            graph.node('2', label=str(precio_lead_actual), shape="box", style="filled", width="2", color='#85A0FE', fillcolor="#85A0FE")
-            graph.node('1', label='Costo por lead:', shape="plaintext", height="0.01", width="")
-            # graph.edge('1', '2')
-            # graph.edge('2', '3')
-            # graph.edge('3', '4')
+                st.graphviz_chart(graphanterior)
+            if(total_leads > 0 and total_agendada > 0 and total_realizada > 0):
+                with col2:
+                    graph2 = graphviz.Digraph(
+                        node_attr={
+                            'height': '1',
+                            'width': '1.5',
+                            'shape': 'box',
+                            'fontsize': '8',
+                            'style': 'filled',
+                            'color': '#85A0FE',
+                            'fixedsize': 'true',
+                            'fontcolor': 'white',
+                            'fillcolor': '#85A0FE'
+                        }
+                    )   
+                    graph2.node('1', label=str(total_leads), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                    graph2.node('2', label=str(total_agendada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                    graph2.node('3', label=str(total_realizada), fontsize="12", fontcolor="black", shape="box", style='filled', fillcolor='#85A0FE', color="#85A0FE")
+                    graph2.node('MES ACTUAL', shape='plaintext', style="", fontcolor="black", height="", width="")
+                    graph2.edge('MES ACTUAL', '1', style="invis")
+                    graph2.edge('1', '2', label=str(format(ef_ag_total*100, '.2f')) + '%', fontcolor=color_final_ag)
+                    graph2.edge('2', '3', label=str(format(ef_re_total*100, '.2f')) + '%', fontcolor=color_final_re)
 
-            st.graphviz_chart(graph)
+                    st.graphviz_chart(graph2)
+            if(precio_lead_actual >= 0 and precio_lead_pasado >= 0 and precio_lead_actual != None):
+                with col3:
+                    graph = graphviz.Digraph(
+                    graph_attr={'rankdir':'LR'},
+                    edge_attr={
+                        'style':'invis'
+                    }
+                    )
+                    graph.node('5', label=str(precio_lead_pasado), shape="box", style="filled", width="2", color='#FE839C', fillcolor="#FE839C")
+                    graph.node('4', label='Costo por lead:', shape="plaintext", height="0.01", width="")
+                    graph.node('3', label='', shape="plaintext", width="")
+                    graph.node('2', label=str(precio_lead_actual), shape="box", style="filled", width="2", color='#85A0FE', fillcolor="#85A0FE")
+                    graph.node('1', label='Costo por lead:', shape="plaintext", height="0.01", width="")
+                    # graph.edge('1', '2')
+                    # graph.edge('2', '3')
+                    # graph.edge('3', '4')
+
+                    st.graphviz_chart(graph)
+'''
