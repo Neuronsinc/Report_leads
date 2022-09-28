@@ -197,15 +197,16 @@ with column2:
     total_efectividades = []
     total_efectividades_pasado = []
 
-    efectividad_agendada_pasado = pasado_agendada / pasado_leads * 100
-    efectividad_realizada_pasado = pasado_realizada / pasado_agendada * 100
+   
 
-    efectividad_agendada_total = total_agendada / total_leads * 100
-    efectividad_realizada_total = total_realizada / total_agendada * 100
-
+   
     if(total_agendada > 0 and total_leads > 0 and total_realizada > 0):
+        efectividad_agendada_total = total_agendada / total_leads * 100
+        efectividad_realizada_total = total_realizada / total_agendada * 100
         set_colors(efectividad_agendada_total, efectividad_realizada_total, total_efectividades)
     if(pasado_agendada > 0 and pasado_leads > 0 and pasado_realizada > 0):
+        efectividad_agendada_pasado = pasado_agendada / pasado_leads * 100
+        efectividad_realizada_pasado = pasado_realizada / pasado_agendada * 100
         set_colors(efectividad_agendada_pasado, efectividad_realizada_pasado, total_efectividades_pasado)
 
     st.write(total_efectividades)
