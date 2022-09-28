@@ -11,12 +11,14 @@ from pptx.dml.color import RGBColor
 from datetime import date
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import PP_ALIGN
+from pptx.util import Pt
 
 # Colores para indicadores de efectividad 
 EFECTIVIDAD_BAJA = RGBColor(0xFF, 0x00, 0x00)
 EFECTIVIDAD_MEDIA = RGBColor(0xFF,0xA5,0x00)
 EFECTIVIDAD_ALTA = RGBColor(0x00, 0xFF, 0x00)
-
+WHITE = RGBColor(0xFF, 0xFF, 0xFF)
+DARK_PURPLE = RGBColor(0x56, 0x41, 0x65)
 
 def srt(grp):
         sort_shape = grp.shapes[0]
@@ -27,6 +29,7 @@ def srt(grp):
 
 def generate_pptx(prs):
     print('-------')
+    
     if(len(efectividades) == number_of_weeks and all([len(x) == 2 for x in efectividades[0]]) and all(x > 0 for x in matriz_leads_citas[i])):            
         
         
@@ -40,41 +43,81 @@ def generate_pptx(prs):
 
             group_shapes.sort(key=srt)
             for group_shape in group_shapes:
-                if (group_shape.shapes[0].text).isnumeric() and int(group_shape.shapes[0].text) <= 5:
-                    n = int(group_shape.shapes[0].text) - 1
-                    group_shape.shapes[0].text = ''
-                    group_shape.shapes[0].text = dates[n]               
-                    j = 0
-                    k = 0
-                    for oval in [shape for shape in group_shape.shapes if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE and shape.auto_shape_type == MSO_SHAPE.OVAL]:
-                        oval.text = ''
-                        frame1 = oval.text_frame.paragraphs[0]
-                        frame1.alignment = PP_ALIGN.CENTER
-                        run1 = frame1.add_run()
-                        run1.text = str(matriz_leads_citas[n][j])
-                        font = run1.font
-                        j = j+1
-                    for textbox in [shape for shape in group_shape.shapes if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX and shape != group_shape.shapes[0]]:
-                        textbox.text = ''
-                        frame2 = textbox.text_frame.paragraphs[0]
-                        frame2.alignment = PP_ALIGN.CENTER
-                        run2 = frame2.add_run()
-                        run2.text = efectividades[n][k][0]
-                        font = run2.font
-                        font.color.rgb = efectividades[n][k][1]
-                        k = k+1
-                elif (group_shape.shapes[0].text == 'total'):
+                
+                shapes_in_group = [ shape for shape in group_shape.shapes]
+                shapes_in_group.sort(key=lambda x: int(x.text.replace('%', '')) if (x.has_text_frame and x.text.replace('%', '').isnumeric() and int(x.text.replace('%', '')) > 0) else 100)
+                if (shapes_in_group[0].has_text_frame and shapes_in_group[0].text.isnumeric() and int(shapes_in_group[0].text) <= 5):
+                    print(shapes_in_group[0].text)
+                    n = int(shapes_in_group[0].text) - 1
+                    if n < number_of_weeks:
+                        shapes_in_group[0].text = ''
+                        frame = shapes_in_group[0].text_frame.paragraphs[0]
+                        frame.alignment = PP_ALIGN.LEFT
+                        run = frame.add_run()
+                        run.text = dates[n]
+                        font = run.font
+                        font.name = 'Helvetica Neue'
+                        font.size = Pt(14)
+                        font.bold = True
+                        font.color.rgb = DARK_PURPLE              
+                        j = 0
+                        k = 0
+                        print(n)
+                        for oval in [shape for shape in shapes_in_group if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE and shape.auto_shape_type == MSO_SHAPE.OVAL]:
+                            oval.text = ''
+                            frame1 = oval.text_frame.paragraphs[0]
+                            frame1.alignment = PP_ALIGN.CENTER
+                            run1 = frame1.add_run()
+                            run1.text = str(matriz_leads_citas[n][j])
+                            font = run1.font
+                            font.name = 'Helvetica Neue'
+                            font.size = Pt(24 if len(run1.text) == 2 else 18)
+                            font.bold = True
+                            font.color.rgb = WHITE
+                            j = j+1
+                        for textbox in [shape for shape in shapes_in_group if shape.shape_type == MSO_SHAPE_TYPE.TEXT_BOX and shape != shapes_in_group[0]]:
+                            textbox.text = ''
+                            frame2 = textbox.text_frame.paragraphs[0]
+                            frame2.alignment = PP_ALIGN.CENTER
+                            run2 = frame2.add_run()
+                            run2.text = efectividades[n][k][0]
+                            font = run2.font
+                            font.color.rgb = efectividades[n][k][1]
+                            k = k+1
+                elif (shapes_in_group[0].has_text_frame and shapes_in_group[0].text == 'total'):
+                    shapes_in_group[0].text = ''
+                    frame = shapes_in_group[0].text_frame.paragraphs[0]
+                    frame.alignment = PP_ALIGN.LEFT
+                    run = frame.add_run()
+                    run.text = curr_month + ' 01' + '-' + today_date.strftime('%d')
+                    font = run.font
+                    font.name = 'Helvetica Neue'
+                    font.size = Pt(14)
+                    font.bold = True
+                    font.color.rgb = DARK_PURPLE  
                     m = 0
                     u = 0
-                    for rectangle in [shape for shape in group_shape.shapes if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE and shape.auto_shape_type == MSO_SHAPE.RECTANGLE]:
-                        if(rectangle.text == ''):
-                            frame3 = rectangle.text_frame.paragraphs[0]
-                            frame3.alignment = PP_ALIGN.CENTER
-                            run3 = frame3.add_run()
-                            run3.text = str(totales[m])
-                            font = run3.font
-                            m = m+1
-                        if(rectangle.text == '%'):
+                    sub = ['Leads', 'Citas Agendadas', 'Visitas']
+                    for rectangle in [shape for shape in shapes_in_group if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE and shape.auto_shape_type == MSO_SHAPE.RECTANGLE]:
+                        rectangle.text = ''
+                        frame3 = rectangle.text_frame.paragraphs[0]
+                        frame3.alignment = PP_ALIGN.CENTER
+                        run3 = frame3.add_run()
+                        run3.text = str(totales[m]) + '\n'
+                        font = run3.font
+                        font.name = 'Helvetica Neue'
+                        font.size = Pt(20)
+                        font.bold = True
+                        font.color.rgb = WHITE
+                        run32 = frame3.add_run()
+                        run32.text = sub[m]
+                        font = run32.font
+                        font.name = 'Helvetica Neue'
+                        font.size = Pt(10)
+                        font.bold = True
+                        font.color.rgb = WHITE
+                        m = m+1
+                        if('%' in rectangle.text):
                             rectangle.text = ''
                             frame4 = rectangle.text_frame.paragraphs[0]
                             frame4.alignment = PP_ALIGN.CENTER
@@ -83,18 +126,31 @@ def generate_pptx(prs):
                             font = run4.font
                             font.color.rgb = total_efectividades[u][1]
                             u = u+1
-                elif (group_shape.shapes[0].text == 'pasado'):
+                elif (shapes_in_group[0].has_text_frame and shapes_in_group[0].text == 'pasado'):
+                    frame = shapes_in_group[0].text_frame.paragraphs[0]
+                    frame.alignment = PP_ALIGN.LEFT
+                    run = frame.add_run()
+                    run.text = curr_month + ' 01' + '-' + today_date.strftime('%d')
+                    font = run.font
+                    font.name = 'Helvetica Neue'
+                    font.size = Pt(14)
+                    font.bold = True
+                    font.color.rgb = DARK_PURPLE   
                     r = 0
                     t = 0
-                    for rectangle in [shape for shape in group_shape.shapes if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE and shape.auto_shape_type == MSO_SHAPE.RECTANGLE]:
-                        if(rectangle.text == ''):
-                            frame5 = rectangle.text_frame.paragraphs[0]
-                            frame5.alignment = PP_ALIGN.CENTER
-                            run5 = frame5.add_run()
-                            run5.text = str(totales_pasado[r])
-                            font = run5.font
-                            r = r+1
-                        if(rectangle.text == '%'):
+                    for rectangle in [shape for shape in shapes_in_group if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE and shape.auto_shape_type == MSO_SHAPE.RECTANGLE]:
+                       
+                        frame5 = rectangle.text_frame.paragraphs[0]
+                        frame5.alignment = PP_ALIGN.CENTER
+                        run5 = frame5.add_run()
+                        run5.text = str(totales_pasado[r])
+                        font = run5.font
+                        font.name = 'Helvetica Neue'
+                        font.size = Pt(24 if len(run1.text) == 2 else 18)
+                        font.bold = True
+                        font.color.rgb = WHITE
+                        r = r+1
+                        if('%' in rectangle.text):
                             rectangle.text = ''
                             frame6 = rectangle.text_frame.paragraphs[0]
                             frame6.alignment = PP_ALIGN.CENTER
@@ -132,7 +188,8 @@ st.set_page_config(layout="wide")
 st.title("Creación de Reportes Sobre Leads y Efectividad de Citas")
 
 dates = []
-
+mydate = datetime.datetime.now()
+curr_month = mydate.strftime("%B").upper()[0:3]
 primer_dia_mes = datetime.date.today().replace(day=1)
 
 start_date = st.date_input("Ingrese fecha inicial:")
@@ -154,10 +211,10 @@ for i in range(number_of_weeks):
     col1.write(str(curr_date))
     col3.markdown('<p style="color:rgba(0, 0, 0, 0.5)">.</p>', unsafe_allow_html=True)
     if(curr_date + datetime.timedelta(days = 6) > today_date):
-        dates.append(curr_date.strftime('%d/%m/%Y') + '-' +  today_date.strftime('%d/%m/%Y'))
+        dates.append(curr_month + ' ' + curr_date.strftime('%d') + '-' + today_date.strftime('%d'))
         col2.write(today_date.strftime('%d/%m/%Y'))
     else:
-        dates.append(curr_date.strftime('%d/%m/%Y') + ' - ' + (curr_date + datetime.timedelta(days = 6)).strftime('%d/%m/%Y'))
+        dates.append(curr_month + ' ' + curr_date.strftime('%d') + '-' + (curr_date + datetime.timedelta(days = 6)).strftime('%d'))
         col2.write(str(curr_date + datetime.timedelta(days = 6)))
         curr_date = curr_date + datetime.timedelta(days = 7)
 
@@ -183,7 +240,6 @@ with column1:
     total_realizada = actual_realizada if actual_realizada > 0 else sum(l[2] for l in matriz_leads_citas)
     totales = [total_leads, total_agendada, total_realizada]
 
-st.write(total_leads, total_agendada, total_realizada)
 with column2:
     '''
     ## Datos del mes pasado
@@ -209,7 +265,6 @@ with column2:
         efectividad_realizada_pasado = pasado_realizada / pasado_agendada * 100
         set_colors(efectividad_agendada_pasado, efectividad_realizada_pasado, total_efectividades_pasado)
 
-    st.write(total_efectividades)
 
 '''
 ## Otros
@@ -229,7 +284,6 @@ if(number_of_weeks > 0 and all(x > 0 for x in matriz_leads_citas[i])):
             efectividad_agendada = round(matriz_leads_citas[i][1] / matriz_leads_citas[i][0], 4) * 100 # (citas_agendadas / leads) * 100
             efectividad_realizada = round(matriz_leads_citas[i][2] / matriz_leads_citas[i][1], 4)* 100 # (citas_realizadas / citas_agendadas) * 100
             set_colors(efectividad_agendada, efectividad_realizada, efectividades[i])
-
     
 
     
