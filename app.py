@@ -1,6 +1,7 @@
 from cgitb import text
 import datetime
 from io import BytesIO
+import io
 import math
 from tokenize import group
 import streamlit as st
@@ -12,6 +13,7 @@ from datetime import date
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import PP_ALIGN
 from pptx.util import Pt
+import requests
 
 # Colores para indicadores de efectividad 
 EFECTIVIDAD_BAJA = RGBColor(0xFF, 0x00, 0x00)
@@ -354,22 +356,23 @@ if(number_of_weeks > 0 and (all(x > 0 for x in matriz_leads_citas[i]))):
 
     st.write("#") 
     st.write("#")
-    upload = st.file_uploader(label="Plantilla")
+
+
+    
+    
     if show:
-        if upload is not None:
-            prs = Presentation(upload)
-            st.download_button( 
+        r = requests.get('https://github.com/Neuronsinc/Report_leads/blob/main/template.pptx?raw=true')
+        prs = Presentation(io.BytesIO(r.content))
+        st.download_button( 
 
-            label = 'Descargar pptx',
-            data= generate_pptx(prs),
+        label = 'Descargar pptx',
+        data= generate_pptx(prs),
 
-            file_name='efectividad_' + date.today().strftime("%d_%m_%Y") + '.pptx',
+        file_name='efectividad_' + date.today().strftime("%d_%m_%Y") + '.pptx',
 
-            mime='application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        mime='application/vnd.openxmlformats-officedocument.presentationml.presentation',
 
-        )
-        else:
-            st.warning("Debe subir un archivo pptx")    
+    ) 
     else:
         st.warning("Debe llenar los datos del mes anterior")  
 
